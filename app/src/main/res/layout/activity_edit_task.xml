@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@android:color/white">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp">
+
+        <ImageButton
+            android:id="@+id/buttonCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/baseline_cancel_24"
+            android:contentDescription="Отмена"
+            android:background="@android:color/transparent"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true" />
+
+        <Button
+            android:id="@+id/buttonSave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Сохранить"
+            android:background="@android:color/transparent"
+            android:textColor="@color/lightBlue"
+            android:textSize="16sp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true" />
+    </RelativeLayout>
+
+    <EditText
+        android:id="@+id/editTextTaskName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Введите задачу"
+        android:textSize="16sp"
+        android:padding="12dp"
+        android:background="@drawable/edittext_background"
+        android:textColor="@android:color/black"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp" />
+
+    <TextView
+        android:id="@+id/textViewPriorityLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Важность"
+        android:textSize="20sp"
+        android:textColor="@android:color/black"
+        android:layout_marginBottom="4dp"
+        android:typeface="sans"
+        android:gravity="start"/>
+
+    <Spinner
+        android:id="@+id/spinnerPriority"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:spinnerMode="dropdown"
+        android:background="@android:color/white"
+        android:popupBackground="@android:color/white"
+        android:entries="@array/priority_options"
+        android:layout_marginBottom="16dp" />
+
+    <Button
+        android:id="@+id/buttonSetDeadline"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Сделать до"
+        android:background="@android:color/transparent"
+        android:textColor="@android:color/black"
+        android:textSize="20sp"
+        android:textAllCaps="false"
+        android:typeface="sans"
+        android:gravity="start"/>
+
+    <TextView
+        android:id="@+id/textViewDeadline"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Дедлайн не установлен"
+        android:textSize="14sp"
+        android:textColor="@android:color/black"
+        android:layout_marginBottom="16dp" />
+
+</LinearLayout>

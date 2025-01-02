@@ -1,3 +1,8 @@
 <resources>
-    <string name="app_name">My App2</string>
+    <string name="app_name">MyApp2</string>
+    <string-array name="priority_options">
+        <item>Нет</item>
+        <item>Средний</item>
+        <item>Высокий!!!</item>
+    </string-array>
 </resources>
