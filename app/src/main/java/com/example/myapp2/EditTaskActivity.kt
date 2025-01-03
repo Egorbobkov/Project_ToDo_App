@@ -9,7 +9,6 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import java.util.*
 import android.content.Intent
-import android.widget.ArrayAdapter
 import android.widget.ImageButton
 
 
@@ -25,6 +24,7 @@ class EditTaskActivity : AppCompatActivity() {
     private var task: Task? = null
     private var deadline: String = ""
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_task)
@@ -36,24 +36,30 @@ class EditTaskActivity : AppCompatActivity() {
         buttonSave = findViewById(R.id.buttonSave)
         buttonCancel = findViewById(R.id.buttonCancel)
 
-        val taskName = intent.getStringExtra("TASK_NAME")
+        val taskName = intent.getStringExtra("TASK_NAME") ?: ""
+        val taskDeadline = intent.getStringExtra("TASK_DEADLINE") ?: ""
         val taskPriority = intent.getIntExtra("TASK_PRIORITY", 0)
-        val taskDeadline = intent.getStringExtra("TASK_DEADLINE")
+        val taskId = intent.getIntExtra("TASK_ID", 0)
 
         editTextTaskName.setText(taskName)
+        textViewDeadline.text = if (taskDeadline.isNotEmpty()) taskDeadline else "Нет срока"
+        deadline = taskDeadline
 
         val priorityOptions = resources.getStringArray(R.array.priority_options)
-        val spinnerAdapter = ArrayAdapter(
+        val spinnerAdapter = PriorityAdapter(
             this,
             R.layout.spinner_item,
             priorityOptions
         )
         spinnerAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item)
         spinnerPriority.adapter = spinnerAdapter
+        spinnerPriority.setSelection(taskPriority)
 
-        if (taskDeadline != null) {
-            textViewDeadline.text = taskDeadline
-            deadline = taskDeadline
+        // Если taskId не передан, значит задача новая
+        if (taskId == 0) {
+            task = Task(id = generateTaskId(), name = "", priority = 0, deadline = "")
+        } else {
+            task = Task(id = taskId, name = taskName, priority = taskPriority, deadline = taskDeadline)
         }
 
         buttonSetDeadline.setOnClickListener {
@@ -69,21 +75,24 @@ class EditTaskActivity : AppCompatActivity() {
         }
     }
 
+    private fun generateTaskId(): Int {
+        return System.currentTimeMillis().toInt()
+    }
+
     private fun saveTask() {
         val newTaskName = editTextTaskName.text.toString()
         val newPriority = spinnerPriority.selectedItemPosition
         val newDeadline = deadline
 
         if (newTaskName.isNotEmpty()) {
-            val updatedTask = Task(
-                id = task?.id ?: 0,
-                name = newTaskName,
-                priority = newPriority,
+            task?.apply {
+                name = newTaskName
+                priority = newPriority
                 deadline = newDeadline
-            )
+            }
 
             val resultIntent = Intent().apply {
-                putExtra("UPDATED_TASK", updatedTask)
+                putExtra("UPDATED_TASK", task)
             }
             setResult(RESULT_OK, resultIntent)
             finish()
@@ -91,6 +100,7 @@ class EditTaskActivity : AppCompatActivity() {
             editTextTaskName.error = "Название задачи не может быть пустым"
         }
     }
+
 
     private fun cancelTask() {
         setResult(RESULT_CANCELED)

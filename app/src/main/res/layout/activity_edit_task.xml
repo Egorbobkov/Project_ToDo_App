@@ -37,13 +37,18 @@
         android:id="@+id/editTextTaskName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Введите задачу"
+        android:hint="Что надо сделать"
         android:textSize="16sp"
         android:padding="12dp"
         android:background="@drawable/edittext_background"
         android:textColor="@android:color/black"
         android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp" />
+        android:layout_marginBottom="16dp"
+        android:lines="4"
+        android:gravity="top"
+        android:scrollbars="vertical"
+        android:inputType="textMultiLine"
+        android:overScrollMode="always"/>
 
     <TextView
         android:id="@+id/textViewPriorityLabel"

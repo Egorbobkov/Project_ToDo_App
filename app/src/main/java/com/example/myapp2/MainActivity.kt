@@ -29,11 +29,14 @@ class MainActivity : AppCompatActivity() {
         editTaskLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 val updatedTask = result.data?.getSerializableExtra("UPDATED_TASK") as? Task
-                updatedTask?.let {
-                    val position = taskList.indexOfFirst { it.id == updatedTask.id }
+                updatedTask?.let { task ->
+                    val position = taskList.indexOfFirst { it.id == task.id }
                     if (position != -1) {
-                        taskList[position] = updatedTask
+                        taskList[position] = task
                         taskAdapter.notifyItemChanged(position)
+                    } else {
+                        taskList.add(task)
+                        taskAdapter.notifyItemInserted(taskList.size - 1)
                     }
                 }
             }
@@ -66,7 +69,12 @@ class MainActivity : AppCompatActivity() {
 
         val fabAddTask = findViewById<FloatingActionButton>(R.id.fabAddTask)
         fabAddTask.setOnClickListener {
-            showAddTaskDialog()
+            val intent = Intent(this, EditTaskActivity::class.java).apply {
+                putExtra("TASK_NAME", "")
+                putExtra("TASK_PRIORITY", 0)
+                putExtra("TASK_DEADLINE", "")
+            }
+            editTaskLauncher.launch(intent)
         }
     }
 
