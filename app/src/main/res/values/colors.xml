@@ -18,4 +18,7 @@
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
     <color name="lightBlue">#007AFF</color>
+    <color name="delete_red">#FF3B30</color>
+    <color name="delete_gray">#8E8E93</color>
+
 </resources>

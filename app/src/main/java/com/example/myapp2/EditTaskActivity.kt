@@ -10,6 +10,10 @@ import androidx.appcompat.app.AppCompatActivity
 import java.util.*
 import android.content.Intent
 import android.widget.ImageButton
+import androidx.core.widget.addTextChangedListener
+import androidx.core.content.ContextCompat
+import android.widget.Switch
+
 
 
 class EditTaskActivity : AppCompatActivity() {
@@ -20,6 +24,10 @@ class EditTaskActivity : AppCompatActivity() {
     private lateinit var textViewDeadline: TextView
     private lateinit var buttonSave: Button
     private lateinit var buttonCancel: ImageButton
+    private lateinit var buttonDelete: Button
+    private lateinit var switchDeadline: Switch
+
+
 
     private var task: Task? = null
     private var deadline: String = ""
@@ -35,6 +43,27 @@ class EditTaskActivity : AppCompatActivity() {
         textViewDeadline = findViewById(R.id.textViewDeadline)
         buttonSave = findViewById(R.id.buttonSave)
         buttonCancel = findViewById(R.id.buttonCancel)
+        buttonDelete = findViewById(R.id.buttonDelete)
+        switchDeadline = findViewById(R.id.switchDeadline)
+
+
+        updateDeleteButtonState()
+
+        buttonDelete.setOnClickListener {
+            if (!editTextTaskName.text.isNullOrEmpty()) {
+                val resultIntent = Intent().apply {
+                    putExtra("DELETED_TASK_ID", task?.id)
+                }
+                setResult(RESULT_FIRST_USER, resultIntent)
+                finish()
+            }
+        }
+
+        editTextTaskName.addTextChangedListener {
+            updateDeleteButtonState()
+        }
+
+
 
         val taskName = intent.getStringExtra("TASK_NAME") ?: ""
         val taskDeadline = intent.getStringExtra("TASK_DEADLINE") ?: ""
@@ -55,12 +84,23 @@ class EditTaskActivity : AppCompatActivity() {
         spinnerPriority.adapter = spinnerAdapter
         spinnerPriority.setSelection(taskPriority)
 
-        // Если taskId не передан, значит задача новая
         if (taskId == 0) {
             task = Task(id = generateTaskId(), name = "", priority = 0, deadline = "")
         } else {
             task = Task(id = taskId, name = taskName, priority = taskPriority, deadline = taskDeadline)
         }
+
+        switchDeadline.isChecked = deadline.isNotEmpty()
+
+        switchDeadline.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                showDatePicker()
+            } else {
+                deadline = ""
+                textViewDeadline.text = "Нет срока"
+            }
+        }
+
 
         buttonSetDeadline.setOnClickListener {
             showDatePicker()
@@ -74,6 +114,35 @@ class EditTaskActivity : AppCompatActivity() {
             cancelTask()
         }
     }
+
+    private fun updateDeleteButtonState() {
+        val context = this
+        val grayColor = ContextCompat.getColor(context, R.color.delete_gray)
+        val redColor = ContextCompat.getColor(context, R.color.delete_red)
+
+        if (editTextTaskName.text.isNullOrEmpty()) {
+            buttonDelete.isEnabled = false
+            buttonDelete.setTextColor(grayColor)
+
+            buttonDelete.setCompoundDrawablesWithIntrinsicBounds(
+                ContextCompat.getDrawable(context, R.drawable.ic_delete),
+                null,
+                null,
+                null
+            )
+        } else {
+            buttonDelete.isEnabled = true
+            buttonDelete.setTextColor(redColor)
+
+            buttonDelete.setCompoundDrawablesWithIntrinsicBounds(
+                ContextCompat.getDrawable(context, R.drawable.ic_delete_red),
+                null,
+                null,
+                null
+            )
+        }
+    }
+
 
     private fun generateTaskId(): Int {
         return System.currentTimeMillis().toInt()
@@ -117,8 +186,11 @@ class EditTaskActivity : AppCompatActivity() {
             this, { _, selectedYear, selectedMonth, selectedDay ->
                 deadline = "$selectedDay/${selectedMonth + 1}/$selectedYear"
                 textViewDeadline.text = deadline
+
+                switchDeadline.isChecked = true
             }, year, month, day
         )
         datePickerDialog.show()
     }
+
 }

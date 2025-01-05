@@ -71,17 +71,45 @@
         android:entries="@array/priority_options"
         android:layout_marginBottom="16dp" />
 
-    <Button
-        android:id="@+id/buttonSetDeadline"
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#CCCCCC"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp" />
+
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Сделать до"
-        android:background="@android:color/transparent"
-        android:textColor="@android:color/black"
-        android:textSize="20sp"
-        android:textAllCaps="false"
-        android:typeface="sans"
-        android:gravity="start"/>
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="16dp">
+
+        <Button
+            android:id="@+id/buttonSetDeadline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Сделать до"
+            android:background="@android:color/transparent"
+            android:textColor="@android:color/black"
+            android:textSize="20sp"
+            android:textAllCaps="false"
+            android:typeface="sans"
+            android:gravity="start"/>
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+
+        <Switch
+            android:id="@+id/switchDeadline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp"/>
+    </LinearLayout>
 
     <TextView
         android:id="@+id/textViewDeadline"
@@ -91,5 +119,27 @@
         android:textSize="14sp"
         android:textColor="@android:color/black"
         android:layout_marginBottom="16dp" />
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#CCCCCC"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp" />
+
+    <Button
+        android:id="@+id/buttonDelete"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
+        android:text="Удалить"
+        android:textColor="@android:color/darker_gray"
+        android:drawableStart="@drawable/ic_delete"
+        android:drawablePadding="8dp"
+        android:gravity="center_vertical|start"
+        android:enabled="false"
+        android:padding="8dp" />
+
 
 </LinearLayout>

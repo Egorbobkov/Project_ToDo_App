@@ -1,23 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:background="@android:color/white">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        app:titleTextAppearance="@style/ToolbarTitleStyle"
-        app:titleTextColor="@android:color/black" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="12dp">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewTasks"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:title="Мои дела"
+            app:titleTextColor="@android:color/black" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/task_block_background"
+            android:elevation="4dp"
+            android:clipToPadding="false">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewTasks"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:scrollbars="none" />
+        </LinearLayout>
+    </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabAddTask"
@@ -28,5 +45,5 @@
         app:srcCompat="@drawable/baseline_add_circle_24"
         app:maxImageSize="60dp"
         app:tint="@android:color/white"
-        app:backgroundTint="@color/lightBlue"/>
-</LinearLayout>
+        app:backgroundTint="@color/lightBlue" />
+</FrameLayout>
