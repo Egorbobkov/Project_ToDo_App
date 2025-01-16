@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import android.view.View
 
 class MainActivity : AppCompatActivity() {
 
@@ -16,6 +17,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var taskAdapter: TaskAdapter
     private val taskList = mutableListOf<Task>()
     private lateinit var editTaskLauncher: ActivityResultLauncher<Intent>
+    private lateinit var taskContainer: View
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,15 +36,16 @@ class MainActivity : AppCompatActivity() {
                             taskList.add(task)
                             taskAdapter.notifyItemInserted(taskList.size - 1)
                         }
+                        updateTaskContainerVisibility()
                     }
                 }
             }
-
 
         val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar?.title = "Мои дела"
 
+        taskContainer = findViewById(R.id.taskContainer)
         recyclerViewTasks = findViewById(R.id.recyclerViewTasks)
         recyclerViewTasks.layoutManager = LinearLayoutManager(this)
         taskAdapter = TaskAdapter(
@@ -72,6 +75,11 @@ class MainActivity : AppCompatActivity() {
             }
             editTaskLauncher.launch(intent)
         }
+
+        updateTaskContainerVisibility()
     }
 
+    private fun updateTaskContainerVisibility() {
+        taskContainer.visibility = if (taskList.isEmpty()) View.GONE else View.VISIBLE
+    }
 }
