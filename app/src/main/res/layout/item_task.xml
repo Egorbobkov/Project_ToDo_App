@@ -18,7 +18,10 @@
         android:layout_weight="1"
         android:layout_marginStart="8dp"
         android:text="Task Name"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:textColor="@color/black"
+        android:maxLines="3"
+        android:ellipsize="end"/>
 
     <ImageButton
         android:id="@+id/buttonInfo"

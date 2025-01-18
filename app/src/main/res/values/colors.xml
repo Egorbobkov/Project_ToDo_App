@@ -20,5 +20,7 @@
     <color name="lightBlue">#007AFF</color>
     <color name="delete_red">#FF3B30</color>
     <color name="delete_gray">#8E8E93</color>
+    <color name="Primary">#F7F6F2</color>
+
 
 </resources>

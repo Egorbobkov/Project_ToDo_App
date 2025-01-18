@@ -10,6 +10,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import android.view.View
+import android.widget.TextView
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -18,6 +20,8 @@ class MainActivity : AppCompatActivity() {
     private val taskList = mutableListOf<Task>()
     private lateinit var editTaskLauncher: ActivityResultLauncher<Intent>
     private lateinit var taskContainer: View
+    private lateinit var textViewCompletedCount: TextView
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,21 +42,30 @@ class MainActivity : AppCompatActivity() {
                         }
                         updateTaskContainerVisibility()
                     }
+                } else if (result.resultCode == Activity.RESULT_FIRST_USER) {
+                    val deletedTaskId = result.data?.getIntExtra("DELETED_TASK_ID", -1)
+                    deletedTaskId?.let { id ->
+                        val position = taskList.indexOfFirst { it.id == id }
+                        if (position != -1) {
+                            taskList.removeAt(position)
+                            taskAdapter.notifyItemRemoved(position)
+                            updateTaskContainerVisibility()
+                        }
+                    }
                 }
             }
 
-        val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar)
-        setSupportActionBar(toolbar)
-        supportActionBar?.title = "Мои дела"
-
         taskContainer = findViewById(R.id.taskContainer)
         recyclerViewTasks = findViewById(R.id.recyclerViewTasks)
+        textViewCompletedCount = findViewById(R.id.textViewCompleted)
         recyclerViewTasks.layoutManager = LinearLayoutManager(this)
+
         taskAdapter = TaskAdapter(
             taskList,
             onCheckedChange = { position, isChecked ->
                 taskList[position].isCompleted = isChecked
                 taskAdapter.notifyItemChanged(position)
+                updateCompletedTaskCount()
             },
             onInfoClick = { task ->
                 val intent = Intent(this, EditTaskActivity::class.java).apply {
@@ -62,9 +75,23 @@ class MainActivity : AppCompatActivity() {
                     putExtra("TASK_ID", task.id)
                 }
                 editTaskLauncher.launch(intent)
+            },
+            onTaskDelete = { position ->
+                taskList.removeAt(position)
+                taskAdapter.notifyItemRemoved(position)
+                updateTaskContainerVisibility()
+                updateCompletedTaskCount()
+            },
+            onTaskCompleted = { position ->
+                val task = taskList[position]
+                task.isCompleted = true
+                taskAdapter.notifyItemChanged(position)
+                updateCompletedTaskCount()
             }
         )
         recyclerViewTasks.adapter = taskAdapter
+
+        taskAdapter.attachToRecyclerView(recyclerViewTasks)
 
         val fabAddTask = findViewById<FloatingActionButton>(R.id.fabAddTask)
         fabAddTask.setOnClickListener {
@@ -77,9 +104,16 @@ class MainActivity : AppCompatActivity() {
         }
 
         updateTaskContainerVisibility()
+        updateCompletedTaskCount()
+    }
+
+    private fun updateCompletedTaskCount() {
+        val completedCount = taskList.count { it.isCompleted }
+        textViewCompletedCount.text = "Выполнено - $completedCount"
     }
 
     private fun updateTaskContainerVisibility() {
         taskContainer.visibility = if (taskList.isEmpty()) View.GONE else View.VISIBLE
     }
 }
+
